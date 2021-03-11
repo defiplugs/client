@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   const [account, setAccount] = useState('');
@@ -9,19 +9,13 @@ function App() {
   }
 
   useEffect(() => {
-    //console.log(window.ethereum.isConnected());
-    // if (window.ethereum.isConnected()) {
-    //   console.log('conn');
-    //   setAccount(window.ethereum.selectedAddress);
-    // }
-    // console.log(window.ethereum.isConnected());
-    window.ethereum
-      .request({
-        method: 'eth_requestAccounts',
-      })
-      .then((account) => {
-        setAccount(account);
-      });
+    // check already connected account
+    window.ethereum.request({ method: 'eth_accounts' }).then((addr) => {
+      console.log(addr);
+      if (addr.length > 0) {
+        setAccount(addr[0]);
+      }
+    });
   }, []);
 
   const initiateWallet = async () => {
@@ -33,6 +27,7 @@ function App() {
   };
 
   console.log(window.ethereum.selectedAddress);
+  console.log(window.ethereum.isConnected());
 
   return (
     <div className="App">
