@@ -16,24 +16,32 @@ function Dashboard() {
   }, []);
 
   const initiateWallet = async () => {
+    if (account) {
+      return;
+    }
     const accounts = await ethereum.request({
       method: 'eth_requestAccounts',
     });
-    const account = accounts[0];
-    setAccount(account);
+    const acc = accounts[0];
+    setAccount(acc);
   };
+
+  const addressTrim = (str) => {
+    const trimmedStr = str.slice(0, 6) + '...' + str.slice(38);
+    return trimmedStr;
+  };
+
   return (
     <div className="dashboard">
       <div className="head-section">
-        <button>LOGO</button>
-        {!account && (
-          <button className="connect-wallet" onClick={initiateWallet}>
-            CONNECT WALLET
-          </button>
-        )}
+        <p>DEFIPLUGS</p>
+        <button className="connect-wallet" onClick={initiateWallet}>
+          {account ? addressTrim(account) : 'CONNECT WALLET'}
+        </button>
       </div>
-
-      <p>{account}</p>
+      <section className="main-section">
+        <p>main</p>
+      </section>
     </div>
   );
 }

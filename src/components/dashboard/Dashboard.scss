@@ -1,16 +1,17 @@
 .dashboard {
-  padding: 20px;
   .head-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 20px;
+    border-bottom: #e4e4e4 1px solid;
     .connect-wallet {
       padding: 10px 25px;
       font-size: 14px;
       cursor: pointer;
       border: none;
       border-radius: 50px;
-      background-color: #ef19f3;
+      background-color: #1c19f3;
       font-weight: 700;
       color: #fff;
       transition: all 200ms ease;
@@ -18,8 +19,12 @@
         outline: none;
       }
       &:hover {
-        background-color: darken(#ef19f3, 8);
+        background-color: darken(#1c19f3, 8);
       }
     }
+  }
+
+  .main-section {
+    padding: 20px;
   }
 }
