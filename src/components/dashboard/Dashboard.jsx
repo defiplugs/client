@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import './Dashboard.scss';
+
 function Dashboard() {
   const { ethereum } = window;
   const [account, setAccount] = useState('');
@@ -21,8 +23,15 @@ function Dashboard() {
     setAccount(account);
   };
   return (
-    <div>
-      {!account && <button onClick={initiateWallet}>CONNECT WALLET</button>}
+    <div className="dashboard">
+      <div className="head-section">
+        <button>LOGO</button>
+        {!account && (
+          <button className="connect-wallet" onClick={initiateWallet}>
+            CONNECT WALLET
+          </button>
+        )}
+      </div>
 
       <p>{account}</p>
     </div>
