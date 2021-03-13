@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Settings from '../settings/Settings';
 
 import './Dashboard.scss';
 
@@ -39,9 +40,13 @@ function Dashboard() {
           {account ? addressTrim(account) : 'CONNECT WALLET'}
         </button>
       </div>
-      <section className="main-section">
-        <p>main</p>
-      </section>
+      {account ? (
+        <section className="main-section">
+          <Settings />
+        </section>
+      ) : (
+        <p className="connect-notif">Please connect your wallet</p>
+      )}
     </div>
   );
 }

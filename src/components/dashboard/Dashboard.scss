@@ -4,7 +4,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: #e4e4e4 1px solid;
+    // border-bottom: #e4e4e4 1px solid;
+    background-color: #2c2e35;
     .connect-wallet {
       padding: 10px 25px;
       font-size: 14px;
@@ -25,6 +26,12 @@
   }
 
   .main-section {
-    padding: 20px;
+    padding: 20px 30px;
+  }
+  .connect-notif {
+    text-align: center;
+    margin-top: 100px;
+    font-size: 24px;
+    color: #b9b9b9;
   }
 }

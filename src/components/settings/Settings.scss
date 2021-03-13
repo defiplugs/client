@@ -1,0 +1,25 @@
+.settings {
+  .section-grid {
+    display: flex;
+    justify-content: space-between;
+    div {
+      width: 46%;
+      .config-box {
+        border: 1px solid #bbbaff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 10px;
+        box-sizing: border-box;
+        width: 100%;
+      }
+    }
+  }
+
+  .config-header {
+    display: flex;
+    align-items: center;
+    p {
+      margin-left: 10px;
+    }
+  }
+}
