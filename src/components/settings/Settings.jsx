@@ -1,12 +1,18 @@
-import React from 'react';
+import Reactm, { useState } from 'react';
+import { Select } from 'antd';
 
 import './Settings.scss';
 
 function Settings() {
+  const { Option } = Select;
+  const [selectedCurrency, setSelectedCurrency] = useState('usdc');
+  const changeCurrency = (value) => {
+    setSelectedCurrency(value);
+  };
   return (
     <div className="settings">
       <div className="section-grid">
-        <div>
+        <div className="section-grid-child">
           <div className="config-header">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,11 +40,45 @@ function Settings() {
             <p>Configuration</p>
           </div>
           <div className="config-box">
-            <p>config</p>
+            <div className="config-box-child">
+              <p>Shape</p>
+              <div className="btn-shape">
+                <button>Button</button>
+                <button>Button</button>
+                <button>Button</button>
+              </div>
+            </div>
+            <div className="config-box-child mt-30">
+              <p>Text</p>
+              <input type="text" />
+            </div>
+          </div>
+
+          <div className="config-box">
+            <div className="config-box-child">
+              <p>Currency</p>
+              <div className="btn-shape">
+                <Select
+                  defaultValue={selectedCurrency}
+                  style={{ width: 120 }}
+                  onChange={changeCurrency}
+                >
+                  <Option value="usdt">USDT</Option>
+                  <Option value="usdc">USDC</Option>
+                  <Option value="dai">DAI</Option>
+                  <Option value="hoge">HOGE</Option>
+                </Select>
+              </div>
+            </div>
+            <div className="config-box-child mt-30">
+              <p>Price</p>
+              <input type="number" />
+              <p style={{ fontWeight: '400' }}>{selectedCurrency}</p>
+            </div>
           </div>
         </div>
 
-        <div>
+        <div className="section-grid-child">
           <div className="config-header">
             <svg
               xmlns="http://www.w3.org/2000/svg"

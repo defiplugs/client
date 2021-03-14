@@ -2,8 +2,8 @@
   .section-grid {
     display: flex;
     justify-content: space-between;
-    div {
-      width: 46%;
+    .section-grid-child {
+      width: 49%;
       .config-box {
         border: 1px solid #bbbaff;
         border-radius: 8px;
@@ -11,6 +11,44 @@
         margin-top: 10px;
         box-sizing: border-box;
         width: 100%;
+        .config-box-child {
+          display: flex;
+          align-items: center;
+          p{
+            font-weight: 700;
+            margin-right: 20px;
+          }
+          input {
+            margin-right: 10px;
+          }
+          .btn-shape {
+           button {
+             margin-right: 15px;
+             border: 1px solid #c1c1c1;
+             padding: 10px 25px;
+             background-color: #fff;
+             cursor: pointer;
+             &:focus {
+               outline: none;
+             }
+             &:first-child{
+               border-radius: 30px;
+             }
+             &:nth-child(2){
+              border-radius: 8px;
+            }
+           }
+          }
+
+          input {
+            border: 1px solid #c1c1c1;
+            padding: 8px;
+            border-radius: 3px;
+            &:focus{
+              outline: #1c19f3;
+            }
+          }
+        }
       }
     }
   }
