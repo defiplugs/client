@@ -1,13 +1,31 @@
-import Reactm, { useState } from 'react';
-import { Select } from 'antd';
+import React, { useState } from 'react';
+import { Select, Tabs } from 'antd';
+import { SketchPicker } from 'react-color';
 
 import './Settings.scss';
 
 function Settings() {
   const { Option } = Select;
+  const { TabPane } = Tabs;
+  const [shapeSelect, setShapeSelect] = useState(1);
+  const [color, setColor] = useState('#ffffff');
+  const [colorBtn, setColorBtn] = useState('#1c19f3');
+  const [btnTxt, setBtnTxt] = useState('Buy Now');
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
+
   const changeCurrency = (value) => {
     setSelectedCurrency(value);
+  };
+  const buttonShape = () => {
+    if (shapeSelect === 1) {
+      return '50px';
+    }
+    if (shapeSelect === 2) {
+      return '8px';
+    }
+    if (shapeSelect === 1) {
+      return 'none';
+    }
   };
   return (
     <div className="settings">
@@ -43,14 +61,53 @@ function Settings() {
             <div className="config-box-child">
               <p>Shape</p>
               <div className="btn-shape">
-                <button>Button</button>
-                <button>Button</button>
-                <button>Button</button>
+                <button
+                  style={{ background: shapeSelect === 1 ? '#e5ebff' : 'none' }}
+                  onClick={() => setShapeSelect(1)}
+                >
+                  Button
+                </button>
+                <button
+                  style={{ background: shapeSelect === 2 ? '#e5ebff' : 'none' }}
+                  onClick={() => setShapeSelect(2)}
+                >
+                  Button
+                </button>
+                <button
+                  style={{ background: shapeSelect === 3 ? '#e5ebff' : 'none' }}
+                  onClick={() => setShapeSelect(3)}
+                >
+                  Button
+                </button>
               </div>
             </div>
             <div className="config-box-child mt-30">
               <p>Text</p>
-              <input type="text" />
+              <input
+                type="text"
+                value={btnTxt}
+                onChange={(e) => setBtnTxt(e.target.value)}
+              />
+            </div>
+            <div className="color-picker mt-30">
+              <div>
+                <p>Button Color</p>
+                <SketchPicker
+                  color={colorBtn}
+                  onChangeComplete={(color) => {
+                    setColorBtn(color.hex);
+                  }}
+                />
+              </div>
+              <div>
+                <p>Text Color</p>
+                <SketchPicker
+                  color={color}
+                  onChangeComplete={(color) => {
+                    setColor(color.hex);
+                  }}
+                />
+              </div>
             </div>
           </div>
 
@@ -79,28 +136,29 @@ function Settings() {
         </div>
 
         <div className="section-grid-child">
-          <div className="config-header">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-eye"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="#1c19f3"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <circle cx="12" cy="12" r="2" />
-              <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" />
-            </svg>
-            <p>Preview</p>
-          </div>
           <div className="config-box">
-            <p>config</p>
+            <Tabs defaultActiveKey="1">
+              <TabPane tab="Preview" key="1">
+                <div className="preview">
+                  <button
+                    style={{
+                      color: color,
+                      background: colorBtn,
+                      borderRadius: buttonShape(),
+                    }}
+                  >
+                    {btnTxt}
+                  </button>
+                </div>
+              </TabPane>
+              <TabPane tab="Code" key="2">
+                Code
+              </TabPane>
+            </Tabs>
           </div>
+          {/* <div className="config-box">
+            <p>config</p>
+          </div> */}
         </div>
       </div>
     </div>
