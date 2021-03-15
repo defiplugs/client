@@ -6,9 +6,8 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import './Settings.scss';
 
-function Settings() {
-  console.log(SyntaxHighlighter.supportedLanguages);
-
+function Settings({ accounts }) {
+  const { ethereum } = window;
   const { Option } = Select;
   const { TabPane } = Tabs;
   const [shapeSelect, setShapeSelect] = useState(1);
@@ -36,26 +35,74 @@ function Settings() {
 
   const codeString = `
   <button id="defiplugs-btn">${btnTxt}<button/>
-  /*You can always style the button as you like on your site*/
+  <p id="defiplugs-connect">Connect wallet</p>
+  /*You can always style the apparent and placement as you like on your site.*/
   <style>
-    #defiplugs-btn{
-      padding: 10px 25px;
-      border: none;
-      font-weight: 700;
+    #defiplugs-btn {
+       padding: 10px 25px;
+       border: none;
+       font-weight: 700;
       border-radius: ${buttonShape()};
       background: ${colorBtn};
       color: ${color};
       cursor: pointer;
     }
+    #defiplugs-connect {
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+    }
   </style>
    
    <script>
+      const defiPlugsConnect = document.querySelector(#defiplugs-connect);
+      let userWallet = ''
+      defiPlugsConnect.addEventListener('click', ()=> {
+        window.ethereum.request({ method: 'eth_requestAccounts' })
+          .then(wallet => {
+            userWallet = wallet[0]
+          })
+      });
+
       const defiPlugsBtn = document.querySelector(#defiplugs-btn);
       defiPlugsBtn.addEventListener('click', ()=> {
-        console.log('yeah')
+        window.ethereum
+          .request({
+           method: 'eth_sendTransaction',
+           params: [
+            {
+              from: userWallet,
+              to: '0x6315a99a1413b864F907f81AB3c1581475142F90',
+              value: '0x29a2241af62c0000',
+              gasPrice: '0x09184e72a000',
+              gas: '0x2710',
+            },
+           ],
+      })
+      .then((txHash) => console.log(txHash))
+      .catch((error) => console.error);
       });
    <script/>
  `;
+
+  const testTrx = () => {
+    //check to BE first
+    ethereum
+      .request({
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            from: accounts,
+            to: '0x6315a99a1413b864F907f81AB3c1581475142F90',
+            value: '0x29a2241af62c0000',
+            gasPrice: '0x09184e72a000',
+            gas: '0x2710',
+          },
+        ],
+      })
+      .then((txHash) => console.log(txHash))
+      .catch((error) => console.error);
+  };
 
   return (
     <div className="settings">
@@ -179,6 +226,7 @@ function Settings() {
               <TabPane tab="Preview" key="1">
                 <div className="preview">
                   <button
+                    onClick={testTrx}
                     style={{
                       color: color,
                       background: colorBtn,
@@ -187,13 +235,14 @@ function Settings() {
                   >
                     {btnTxt}
                   </button>
+                  <p>Connect wallet</p>
                 </div>
               </TabPane>
               <TabPane tab="Code" key="2">
                 <SyntaxHighlighter
                   className="highlighter"
                   language="htmlbars"
-                  // showLineNumbers
+                  showLineNumbers
                   style={atomOneDark}
                   wrapLines={true}
                 >

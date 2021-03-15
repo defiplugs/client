@@ -42,7 +42,7 @@ function Dashboard() {
       </div>
       {account ? (
         <section className="main-section">
-          <Settings />
+          <Settings accounts={account} />
         </section>
       ) : (
         <p className="connect-notif">Please connect your wallet</p>
