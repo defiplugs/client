@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { Select, Tabs } from 'antd';
+import { Select, Tabs, Checkbox } from 'antd';
 import { SketchPicker } from 'react-color';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import './Settings.scss';
 
 function Settings() {
+  console.log(SyntaxHighlighter.supportedLanguages);
+
   const { Option } = Select;
   const { TabPane } = Tabs;
   const [shapeSelect, setShapeSelect] = useState(1);
   const [color, setColor] = useState('#ffffff');
   const [colorBtn, setColorBtn] = useState('#1c19f3');
   const [btnTxt, setBtnTxt] = useState('Buy Now');
+  const [simpleTrx, setSimpleTrx] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
 
   const changeCurrency = (value) => {
     setSelectedCurrency(value);
   };
+
   const buttonShape = () => {
     if (shapeSelect === 1) {
       return '50px';
@@ -23,10 +29,34 @@ function Settings() {
     if (shapeSelect === 2) {
       return '8px';
     }
-    if (shapeSelect === 1) {
-      return 'none';
+    if (shapeSelect === 3) {
+      return '0';
     }
   };
+
+  const codeString = `
+  <button id="defiplugs-btn">${btnTxt}<button/>
+  /*You can always style the button as you like on your site*/
+  <style>
+    #defiplugs-btn{
+      padding: 10px 25px;
+      border: none;
+      font-weight: 700;
+      border-radius: ${buttonShape()};
+      background: ${colorBtn};
+      color: ${color};
+      cursor: pointer;
+    }
+  </style>
+   
+   <script>
+      const defiPlugsBtn = document.querySelector(#defiplugs-btn);
+      defiPlugsBtn.addEventListener('click', ()=> {
+        console.log('yeah')
+      });
+   <script/>
+ `;
+
   return (
     <div className="settings">
       <div className="section-grid">
@@ -80,15 +110,14 @@ function Settings() {
                   Button
                 </button>
               </div>
-            </div>
-            <div className="config-box-child mt-30">
-              <p>Text</p>
+              <p style={{ marginLeft: '20px' }}>Text</p>
               <input
                 type="text"
                 value={btnTxt}
                 onChange={(e) => setBtnTxt(e.target.value)}
               />
             </div>
+
             <div className="color-picker mt-30">
               <div>
                 <p>Button Color</p>
@@ -113,6 +142,15 @@ function Settings() {
 
           <div className="config-box">
             <div className="config-box-child">
+              <Checkbox
+                onChange={(e) => {
+                  setSimpleTrx(e.target.checked);
+                }}
+              >
+                Simple Transaction
+              </Checkbox>
+            </div>
+            <div className="config-box-child  mt-30">
               <p>Currency</p>
               <div className="btn-shape">
                 <Select
@@ -152,13 +190,18 @@ function Settings() {
                 </div>
               </TabPane>
               <TabPane tab="Code" key="2">
-                Code
+                <SyntaxHighlighter
+                  className="highlighter"
+                  language="htmlbars"
+                  // showLineNumbers
+                  style={atomOneDark}
+                  wrapLines={true}
+                >
+                  {codeString}
+                </SyntaxHighlighter>
               </TabPane>
             </Tabs>
           </div>
-          {/* <div className="config-box">
-            <p>config</p>
-          </div> */}
         </div>
       </div>
     </div>
