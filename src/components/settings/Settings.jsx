@@ -3,6 +3,7 @@ import { Select, Tabs, Checkbox } from 'antd';
 import { SketchPicker } from 'react-color';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import Web3 from 'web3';
 
 import './Settings.scss';
 
@@ -21,6 +22,14 @@ function Settings({ accounts }) {
     setSelectedCurrency(value);
   };
 
+  const amt = 1;
+
+  const transferAmount = Web3.utils.toHex(
+    Web3.utils.toWei(amt.toString(), 'ether')
+  );
+
+  console.log(transferAmount);
+
   const buttonShape = () => {
     if (shapeSelect === 1) {
       return '50px';
@@ -34,9 +43,9 @@ function Settings({ accounts }) {
   };
 
   const codeString = `
-  <button id="defiplugs-btn">${btnTxt}<button/>
+  <button id="defiplugs-btn">${btnTxt}</button>
   <p id="defiplugs-connect">Connect wallet</p>
-  /*You can always style the apparent and placement as you like on your site.*/
+  <!--You can always style the appearance and placement as you like on your site -->
   <style>
     #defiplugs-btn {
        padding: 10px 25px;
@@ -55,16 +64,22 @@ function Settings({ accounts }) {
   </style>
    
    <script>
-      const defiPlugsConnect = document.querySelector(#defiplugs-connect);
+      const defiPlugsConnect = document.querySelector("#defiplugs-connect");
+      window.ethereum.request({ method: 'eth_accounts' }).then((addr) => {
+        if (addr.length > 0) {
+          defiPlugsConnect.style.display = 'none'
+        }
+      });
       let userWallet = ''
       defiPlugsConnect.addEventListener('click', ()=> {
         window.ethereum.request({ method: 'eth_requestAccounts' })
           .then(wallet => {
             userWallet = wallet[0]
+            defiPlugsConnect.style.display = 'none'
           })
       });
 
-      const defiPlugsBtn = document.querySelector(#defiplugs-btn);
+      const defiPlugsBtn = document.querySelector("#defiplugs-btn");
       defiPlugsBtn.addEventListener('click', ()=> {
         window.ethereum
           .request({
@@ -72,8 +87,8 @@ function Settings({ accounts }) {
            params: [
             {
               from: userWallet,
-              to: '0x6315a99a1413b864F907f81AB3c1581475142F90',
-              value: '0x29a2241af62c0000',
+              to: '${accounts}',
+              value: '${transferAmount}',
               gasPrice: '0x09184e72a000',
               gas: '0x2710',
             },
@@ -82,26 +97,52 @@ function Settings({ accounts }) {
       .then((txHash) => console.log(txHash))
       .catch((error) => console.error);
       });
-   <script/>
+   </script>
  `;
 
   const testTrx = () => {
-    //check to BE first
-    ethereum
-      .request({
-        method: 'eth_sendTransaction',
-        params: [
+    let web3 = new Web3(window.ethereum);
+    let tokenAddress = '0xfad45e47083e4607302aa43c65fb3106f1cd7607';
+    let toAddress = accounts;
+    let fromAddress = accounts;
+    // Use BigNumber
+    let decimals = web3.utils.toBN(9);
+    let amount = web3.utils.toBN(100);
+    let minABI = [
+      // transfer
+      {
+        constant: false,
+        inputs: [
           {
-            from: accounts,
-            to: '0x6315a99a1413b864F907f81AB3c1581475142F90',
-            value: '0x29a2241af62c0000',
-            gasPrice: '0x09184e72a000',
-            gas: '0x2710',
+            name: '_to',
+            type: 'address',
+          },
+          {
+            name: '_value',
+            type: 'uint256',
           },
         ],
-      })
-      .then((txHash) => console.log(txHash))
-      .catch((error) => console.error);
+        name: 'transfer',
+        outputs: [
+          {
+            name: '',
+            type: 'bool',
+          },
+        ],
+        type: 'function',
+      },
+    ];
+    // Get ERC20 Token contract instance
+    let contract = new web3.eth.Contract(minABI, tokenAddress);
+    // calculate ERC20 token amount
+    let value = amount.mul(web3.utils.toBN(10).pow(decimals));
+    // call transfer function
+    contract.methods
+      .transfer(toAddress, value)
+      .send({ from: fromAddress })
+      .on('transactionHash', function (hash) {
+        console.log(hash);
+      });
   };
 
   return (
@@ -194,7 +235,8 @@ function Settings({ accounts }) {
                   setSimpleTrx(e.target.checked);
                 }}
               >
-                Simple Transaction
+                Simple Transaction (check this if you dont need user details eg.
+                accepting donation)
               </Checkbox>
             </div>
             <div className="config-box-child  mt-30">
