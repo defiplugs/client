@@ -14,8 +14,8 @@ function Settings({ accounts }) {
   const [shapeSelect, setShapeSelect] = useState(1);
   const [color, setColor] = useState('#ffffff');
   const [colorBtn, setColorBtn] = useState('#1c19f3');
-  const [btnTxt, setBtnTxt] = useState('Buy Now');
-  const [simpleTrx, setSimpleTrx] = useState(false);
+  const [btnTxt, setBtnTxt] = useState('Buy with USDC');
+  const [withUserInput, setWithUserInput] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
 
   const changeCurrency = (value) => {
@@ -102,12 +102,12 @@ function Settings({ accounts }) {
 
   const testTrx = () => {
     let web3 = new Web3(window.ethereum);
-    let tokenAddress = '0xfad45e47083e4607302aa43c65fb3106f1cd7607';
+    let tokenAddress = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
     let toAddress = accounts;
     let fromAddress = accounts;
     // Use BigNumber
-    let decimals = web3.utils.toBN(9);
-    let amount = web3.utils.toBN(100);
+    let decimals = web3.utils.toBN(6);
+    let amount = web3.utils.toBN(10);
     let minABI = [
       // transfer
       {
@@ -140,8 +140,9 @@ function Settings({ accounts }) {
     contract.methods
       .transfer(toAddress, value)
       .send({ from: fromAddress })
-      .on('transactionHash', function (hash) {
+      .on('receipt', function (hash) {
         console.log(hash);
+        //hash.from is the sender address
       });
   };
 
@@ -231,12 +232,12 @@ function Settings({ accounts }) {
           <div className="config-box">
             <div className="config-box-child">
               <Checkbox
+                checked={withUserInput}
                 onChange={(e) => {
-                  setSimpleTrx(e.target.checked);
+                  setWithUserInput(e.target.checked);
                 }}
               >
-                Simple Transaction (check this if you dont need user details eg.
-                accepting donation)
+                With user input
               </Checkbox>
             </div>
             <div className="config-box-child  mt-30">
@@ -267,6 +268,10 @@ function Settings({ accounts }) {
             <Tabs defaultActiveKey="1">
               <TabPane tab="Preview" key="1">
                 <div className="preview">
+                  <div style={{ display: withUserInput ? 'block' : 'none' }}>
+                    <input type="text" placeholder="name" />
+                    <input type="email" placeholder="email" />
+                  </div>
                   <button
                     onClick={testTrx}
                     style={{
@@ -278,6 +283,18 @@ function Settings({ accounts }) {
                     {btnTxt}
                   </button>
                   <p>Connect wallet</p>
+                  <div className="preview-tips">
+                    <p>NOTE:</p>
+                    <p>
+                      If you choose to ommit user input, make sure to include
+                      the necessary object in the script (see code), otherwise
+                      there won't be any user details record (only blockchain
+                      transaction record) on database for the corresponding
+                      transaction. IT'S OKAY to ommit user input if you don't
+                      need it, for example when you only need to accept donation
+                      without the need to know user details.
+                    </p>
+                  </div>
                 </div>
               </TabPane>
               <TabPane tab="Code" key="2">
