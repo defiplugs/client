@@ -17,8 +17,10 @@ function Settings({ accounts }) {
   const [btnTxt, setBtnTxt] = useState('Buy with USDC');
   const [withUserInput, setWithUserInput] = useState(true);
   const [donationModel, setDonationModel] = useState(false);
-
+  const [errDonation, setErrDonation] = useState(false);
+  const [donationAmount, setDonationAmount] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
+  const [price, setPrice] = useState('');
 
   const changeCurrency = (value) => {
     setSelectedCurrency(value);
@@ -103,13 +105,17 @@ function Settings({ accounts }) {
  `;
 
   const testTrx = () => {
+    if (!donationAmount && donationModel) {
+      setErrDonation(true);
+      return;
+    }
     let web3 = new Web3(window.ethereum);
     let tokenAddress = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
     let toAddress = accounts;
     let fromAddress = accounts;
     // Use BigNumber
     let decimals = web3.utils.toBN(6);
-    let amount = web3.utils.toBN(10);
+    let amount = web3.utils.toBN(price);
     let minABI = [
       // transfer
       {
@@ -269,7 +275,12 @@ function Settings({ accounts }) {
             </div>
             <div className="config-box-child mt-30">
               <p>Price</p>
-              <input type="number" disabled={donationModel ? true : false} />
+              <input
+                type="number"
+                disabled={donationModel ? true : false}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
               <p style={{ fontWeight: '400' }}>{selectedCurrency}</p>
             </div>
           </div>
@@ -287,8 +298,27 @@ function Settings({ accounts }) {
                   <input
                     type="number"
                     placeholder="Amount"
-                    style={{ display: donationModel ? 'block' : 'none' }}
+                    style={{
+                      display: donationModel ? 'block' : 'none',
+                      marginBottom: '0',
+                    }}
+                    value={donationAmount}
+                    onChange={(e) => {
+                      setDonationAmount(e.target.value);
+                      if (!e.target.value && donationModel) {
+                        setErrDonation(true);
+                      } else {
+                        setErrDonation(false);
+                      }
+                    }}
                   />
+                  <span
+                    style={{
+                      display: errDonation && donationModel ? 'block' : 'none',
+                    }}
+                  >
+                    Please type in your donation amount
+                  </span>
                   <button
                     onClick={testTrx}
                     style={{
