@@ -16,6 +16,8 @@ function Settings({ accounts }) {
   const [colorBtn, setColorBtn] = useState('#1c19f3');
   const [btnTxt, setBtnTxt] = useState('Buy with USDC');
   const [withUserInput, setWithUserInput] = useState(true);
+  const [donationModel, setDonationModel] = useState(false);
+
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
 
   const changeCurrency = (value) => {
@@ -239,6 +241,14 @@ function Settings({ accounts }) {
               >
                 With user input
               </Checkbox>
+              <Checkbox
+                checked={donationModel}
+                onChange={(e) => {
+                  setDonationModel(e.target.checked);
+                }}
+              >
+                Donation Model
+              </Checkbox>
             </div>
             <div className="config-box-child  mt-30">
               <p>Currency</p>
@@ -253,11 +263,13 @@ function Settings({ accounts }) {
                   <Option value="dai">DAI</Option>
                   <Option value="hoge">HOGE</Option>
                 </Select>
+                {/* <input type="text" placeholder="Token contract (erc20 only)" />
+                <button>Set</button> */}
               </div>
             </div>
             <div className="config-box-child mt-30">
               <p>Price</p>
-              <input type="number" />
+              <input type="number" disabled={donationModel ? true : false} />
               <p style={{ fontWeight: '400' }}>{selectedCurrency}</p>
             </div>
           </div>
@@ -269,9 +281,14 @@ function Settings({ accounts }) {
               <TabPane tab="Preview" key="1">
                 <div className="preview">
                   <div style={{ display: withUserInput ? 'block' : 'none' }}>
-                    <input type="text" placeholder="name" />
-                    <input type="email" placeholder="email" />
+                    <input type="text" placeholder="Name" />
+                    <input type="email" placeholder="Email" />
                   </div>
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    style={{ display: donationModel ? 'block' : 'none' }}
+                  />
                   <button
                     onClick={testTrx}
                     style={{
@@ -282,17 +299,16 @@ function Settings({ accounts }) {
                   >
                     {btnTxt}
                   </button>
-                  <p>Connect wallet</p>
+
+                  <p>Connect wallet (MetaMask)</p>
                   <div className="preview-tips">
                     <p>NOTE:</p>
                     <p>
-                      If you choose to ommit user input, make sure to include
-                      the necessary object in the script (see code), otherwise
-                      there won't be any user details record (only blockchain
-                      transaction record) on database for the corresponding
-                      transaction. IT'S OKAY to ommit user input if you don't
-                      need it, for example when you only need to accept donation
-                      without the need to know user details.
+                      Make sure to adjust your button text. If you choose to
+                      ommit user input, make sure to include the necessary
+                      object in the script (see code), otherwise there won't be
+                      any user details record (only blockchain transaction
+                      record) on database for the corresponding transaction.
                     </p>
                   </div>
                 </div>
