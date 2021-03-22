@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "dark-finance-8388d"
+  },
+  "targets": {
+    "dark-finance-8388d": {
+      "hosting": {
+        "defiplugs": [
+          "defiplugs"
+        ]
+      }
+    }
+  }
+}

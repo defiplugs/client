@@ -17,10 +17,29 @@ function Settings({ accounts }) {
   const [btnTxt, setBtnTxt] = useState('Buy with USDC');
   const [withUserInput, setWithUserInput] = useState(true);
   const [donationModel, setDonationModel] = useState(false);
-  const [errDonation, setErrDonation] = useState(false);
+
   const [donationAmount, setDonationAmount] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState('usdc');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(0);
+
+  const tokenList = {
+    usdc: {
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      decimal: 6,
+    },
+    dai: {
+      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      decimal: 18,
+    },
+    usdt: {
+      address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      decimal: 6,
+    },
+    hoge: {
+      address: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
+      decimal: 9,
+    },
+  };
 
   const changeCurrency = (value) => {
     setSelectedCurrency(value);
@@ -46,15 +65,46 @@ function Settings({ accounts }) {
     }
   };
 
+  const priceStringData = () => {
+    if (donationModel) {
+      return '';
+    } else {
+      return `data-dplgsprice="${price}"`;
+    }
+  };
+
   const codeString = `
-  <button id="defiplugs-btn">${btnTxt}</button>
-  <p id="defiplugs-connect">Connect wallet</p>
+  <div class="defiplugs-box">
+    ${
+      withUserInput
+        ? '<input class="defiplugs-input" id="defiplugs-name" type="text" placeholder="Name" />'
+        : ''
+    }
+    ${
+      withUserInput
+        ? '<input class="defiplugs-input" id="defiplugs-email" type="email" placeholder="Email" />'
+        : ''
+    }
+    ${
+      donationModel
+        ? '<input class="defiplugs-input" id="defiplugs-amount" type="number" placeholder="Amount" />'
+        : ''
+    }
+    <button id="defiplugs-btn" ${priceStringData()} data-dplgstoken="${selectedCurrency}" data-dplgsdonation="${
+    donationModel ? 1 : 0
+  }" data-dplgsinput="${withUserInput ? 1 : 0}">${btnTxt}</button>
+    <p id="defiplugs-connect" data-dplgsaccount="${accounts}">Connect wallet (MetaMask)</p>
+  </div>
   <!--You can always style the appearance and placement as you like on your site -->
   <style>
+    .defiplugs-box {
+      width: 300px;
+      text-align: center;
+    }
     #defiplugs-btn {
-       padding: 10px 25px;
-       border: none;
-       font-weight: 700;
+      padding: 10px 25px;
+      border: none;
+      font-weight: 700;
       border-radius: ${buttonShape()};
       background: ${colorBtn};
       color: ${color};
@@ -65,57 +115,43 @@ function Settings({ accounts }) {
       cursor: pointer;
       text-decoration: underline;
     }
+    .defiplugs-input {
+      display: block;
+      font-size: 14px;
+      margin: 0 auto 10px auto;
+      padding: 8px;
+      border-radius: 3px;
+      border: 1px #688dfd solid;
+    }
   </style>
-   
-   <script>
-      const defiPlugsConnect = document.querySelector("#defiplugs-connect");
-      window.ethereum.request({ method: 'eth_accounts' }).then((addr) => {
-        if (addr.length > 0) {
-          defiPlugsConnect.style.display = 'none'
-        }
-      });
-      let userWallet = ''
-      defiPlugsConnect.addEventListener('click', ()=> {
-        window.ethereum.request({ method: 'eth_requestAccounts' })
-          .then(wallet => {
-            userWallet = wallet[0]
-            defiPlugsConnect.style.display = 'none'
-          })
-      });
+  <script>
+    //If you omit the user details from the preview, 
+    //you need to create an object with the same name like below.
+    //You can add whatever property/user details as you like.
+    //Leave empty if you don't need the user details.
+    const defiplugsUserDetails = {
+      name: '',
+      email: ''
+      //you can modify/add any property here  
+    }
 
-      const defiPlugsBtn = document.querySelector("#defiplugs-btn");
-      defiPlugsBtn.addEventListener('click', ()=> {
-        window.ethereum
-          .request({
-           method: 'eth_sendTransaction',
-           params: [
-            {
-              from: userWallet,
-              to: '${accounts}',
-              value: '${transferAmount}',
-              gasPrice: '0x09184e72a000',
-              gas: '0x2710',
-            },
-           ],
-      })
-      .then((txHash) => console.log(txHash))
-      .catch((error) => console.error);
-      });
-   </script>
+    //callback function invoked when transaction done
+    function defiPlugsTrxDone(){
+      //do whatever you need to do here
+    }
+  </script> 
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/defiplugs/connector/connector.js"></script>
  `;
 
   const testTrx = () => {
-    if (!donationAmount && donationModel) {
-      setErrDonation(true);
-      return;
-    }
-    let web3 = new Web3(window.ethereum);
-    let tokenAddress = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+    let web3 = new Web3(ethereum);
+    let tokenAddress = tokenList[selectedCurrency].address;
     let toAddress = accounts;
     let fromAddress = accounts;
     // Use BigNumber
     let decimals = web3.utils.toBN(6);
-    let amount = web3.utils.toBN(price);
+    let amount = web3.utils.toBN(donationModel ? donationAmount : price);
     let minABI = [
       // transfer
       {
@@ -305,20 +341,9 @@ function Settings({ accounts }) {
                     value={donationAmount}
                     onChange={(e) => {
                       setDonationAmount(e.target.value);
-                      if (!e.target.value && donationModel) {
-                        setErrDonation(true);
-                      } else {
-                        setErrDonation(false);
-                      }
                     }}
                   />
-                  <span
-                    style={{
-                      display: errDonation && donationModel ? 'block' : 'none',
-                    }}
-                  >
-                    Please type in your donation amount
-                  </span>
+
                   <button
                     onClick={testTrx}
                     style={{
@@ -333,13 +358,15 @@ function Settings({ accounts }) {
                   <p>Connect wallet (MetaMask)</p>
                   <div className="preview-tips">
                     <p>NOTE:</p>
+                    <p>- Make sure to ADJUST your button text.</p>
                     <p>
-                      Make sure to adjust your button text. If you choose to
-                      ommit user input, make sure to include the necessary
-                      object in the script (see code), otherwise there won't be
-                      any user details record (only blockchain transaction
-                      record) on database for the corresponding transaction.
+                      - If you choose to ommit user input, make sure to include
+                      the necessary object in the script (see code), otherwise
+                      there won't be any user details record (only blockchain
+                      transaction record) on database for the corresponding
+                      transaction.
                     </p>
+                    <p>- You can check the button by clicking on it.</p>
                   </div>
                 </div>
               </TabPane>
