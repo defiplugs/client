@@ -125,8 +125,7 @@ function Settings({ accounts }) {
     }
   </style>
   <script>
-    //If you omit the user details from the preview, 
-    //you need to create an object with the same name like below.
+    //If you omit the user details from the preview, you need to create an object with the same name like below.
     //You can add whatever property/user details as you like.
     //Leave empty if you don't need the user details.
     const defiplugsUserDetails = {
@@ -146,7 +145,7 @@ function Settings({ accounts }) {
 
   const testTrx = () => {
     let web3 = new Web3(ethereum);
-    let tokenAddress = tokenList[selectedCurrency].address;
+    let tokenAddress = '0x07865c6e87b9f70255377e024ace6630c1eaa37f';
     let toAddress = accounts;
     let fromAddress = accounts;
     // Use BigNumber
@@ -185,8 +184,19 @@ function Settings({ accounts }) {
       .transfer(toAddress, value)
       .send({ from: fromAddress })
       .on('receipt', function (hash) {
-        console.log(hash);
         //hash.from is the sender address
+        fetch('http://localhost:5000/', {
+          method: 'POST',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: 'name',
+            email: 'email',
+            tx: hash.transactionHash,
+          }),
+        }).then(() => console.log(hash));
       });
   };
 
