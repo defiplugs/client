@@ -195,6 +195,7 @@ function Settings({ accounts }) {
             name: 'name',
             email: 'email',
             tx: hash.transactionHash,
+            account: accounts,
           }),
         }).then(() => console.log(hash));
       });

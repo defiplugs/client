@@ -1,4 +1,9 @@
 .settings {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 25px;
+  background-color: #f5f7f9;
+  border-radius: 36px 0 0 0;
   .section-grid {
     display: flex;
     justify-content: space-between;
@@ -121,6 +126,7 @@
 
 .highlighter {
   max-height: 70vh;
+  max-width: 700px;
   span {
     font-family: monospace;
     font-size: 13px;

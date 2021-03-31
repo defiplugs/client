@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #292a2f;
+    background-color: #fff;
     & > p {
       color: #fff;
     }
@@ -28,7 +28,8 @@
   }
 
   .main-section {
-    padding: 20px 30px;
+    display: flex;
+    min-height: calc(100vh - 62px);
   }
   .connect-notif {
     text-align: center;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Settings from '../settings/Settings';
+import Sidebar from '../sidebar/Sidebar';
 
 import './Dashboard.scss';
 
@@ -42,6 +43,7 @@ function Dashboard() {
       </div>
       {account ? (
         <section className="main-section">
+          <Sidebar />
           <Settings accounts={account} />
         </section>
       ) : (
