@@ -1,32 +1,4 @@
 .dashboard {
-  .head-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #fff;
-    & > p {
-      color: #fff;
-    }
-    .connect-wallet {
-      padding: 10px 25px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      border-radius: 50px;
-      background-color: #1c19f3;
-      font-weight: 700;
-      color: #fff;
-      transition: all 200ms ease;
-      &:focus {
-        outline: none;
-      }
-      &:hover {
-        background-color: darken(#1c19f3, 8);
-      }
-    }
-  }
-
   .main-section {
     display: flex;
     min-height: calc(100vh - 62px);
