@@ -229,7 +229,7 @@ function Settings({ accounts }) {
               <line x1="4" y1="18" x2="15" y2="18" />
               <line x1="19" y1="18" x2="20" y2="18" />
             </svg>
-            <p>Configuration</p>
+            <p className="config-p">Configuration</p>
           </div>
           <div className="config-box">
             <div className="config-box-child">
@@ -300,7 +300,7 @@ function Settings({ accounts }) {
                   setDonationModel(e.target.checked);
                 }}
               >
-                Donation Model
+                Donation model
               </Checkbox>
             </div>
             <div className="config-box-child  mt-30">

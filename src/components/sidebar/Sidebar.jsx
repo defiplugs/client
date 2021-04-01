@@ -32,6 +32,7 @@ function Sidebar() {
           </svg>
           <p>Dashboard</p>
         </NavLink>
+        <h2>Integration Model</h2>
         <NavLink className="nav-link" to="/embedded">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +51,7 @@ function Sidebar() {
             <polyline points="17 8 21 12 17 16" />
             <line x1="14" y1="4" x2="10" y2="20" />
           </svg>
-          <p>Embedded Mode</p>
+          <p>Embedded</p>
         </NavLink>
         {/* <NavLink className="nav-link" to="/redirect">
           <svg

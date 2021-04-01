@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import './Topbar.scss';
 
-function Topbar() {
+function Topbar({ initAccount }) {
   const { ethereum } = window;
   const [account, setAccount] = useState('');
 
@@ -11,6 +11,7 @@ function Topbar() {
     ethereum.request({ method: 'eth_accounts' }).then((addr) => {
       if (addr.length > 0) {
         setAccount(addr[0]);
+        initAccount(addr[0]);
       }
     });
   }, []);
@@ -24,6 +25,7 @@ function Topbar() {
     });
     const acc = accounts[0];
     setAccount(acc);
+    initAccount(acc);
   };
 
   const addressTrim = (str) => {

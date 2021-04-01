@@ -17,17 +17,24 @@ function App() {
       }
     });
   }, []);
+
+  const initAccount = (acc) => {
+    setAccount(acc);
+  };
+
   return (
     <BrowserRouter>
       <div className="App">
-        <Topbar />
+        <Topbar initAccount={initAccount} />
         <Sidebar />
         {account ? (
           <section className="main-section">
             <Main />
           </section>
         ) : (
-          <p className="connect-notif">Please connect your wallet</p>
+          <div className="connect-notif">
+            <p>Please connect your wallet</p>
+          </div>
         )}
       </div>
     </BrowserRouter>
