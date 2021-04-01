@@ -284,7 +284,7 @@ function Settings({ accounts }) {
             </div>
           </div>
 
-          <div className="config-box">
+          <div className="config-box bg-linear">
             <div className="config-box-child">
               <Checkbox
                 checked={withUserInput}
