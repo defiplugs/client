@@ -7,7 +7,7 @@ import Web3 from 'web3';
 
 import './Settings.scss';
 
-function Settings({ accounts }) {
+function Settings({ account }) {
   const { ethereum } = window;
   const { Option } = Select;
   const { TabPane } = Tabs;
@@ -51,8 +51,6 @@ function Settings({ accounts }) {
     Web3.utils.toWei(amt.toString(), 'ether')
   );
 
-  console.log(transferAmount);
-
   const buttonShape = () => {
     if (shapeSelect === 1) {
       return '50px';
@@ -93,7 +91,7 @@ function Settings({ accounts }) {
     <button id="defiplugs-btn" ${priceStringData()} data-dplgstoken="${selectedCurrency}" data-dplgsdonation="${
     donationModel ? 1 : 0
   }" data-dplgsinput="${withUserInput ? 1 : 0}">${btnTxt}</button>
-    <p id="defiplugs-connect" data-dplgsaccount="${accounts}">Connect wallet (MetaMask)</p>
+    <p id="defiplugs-connect" data-dplgsaccount="${account}">Connect wallet (MetaMask)</p>
   </div>
   <!--You can always style the appearance and placement as you like on your site -->
   <style>
@@ -143,63 +141,63 @@ function Settings({ accounts }) {
   <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/defiplugs/connector/connector.js"></script>
  `;
 
-  const testTrx = () => {
-    let web3 = new Web3(ethereum);
-    let tokenAddress = '0x07865c6e87b9f70255377e024ace6630c1eaa37f';
-    let toAddress = accounts;
-    let fromAddress = accounts;
-    // Use BigNumber
-    let decimals = web3.utils.toBN(6);
-    let amount = web3.utils.toBN(donationModel ? donationAmount : price);
-    let minABI = [
-      // transfer
-      {
-        constant: false,
-        inputs: [
-          {
-            name: '_to',
-            type: 'address',
-          },
-          {
-            name: '_value',
-            type: 'uint256',
-          },
-        ],
-        name: 'transfer',
-        outputs: [
-          {
-            name: '',
-            type: 'bool',
-          },
-        ],
-        type: 'function',
-      },
-    ];
-    // Get ERC20 Token contract instance
-    let contract = new web3.eth.Contract(minABI, tokenAddress);
-    // calculate ERC20 token amount
-    let value = amount.mul(web3.utils.toBN(10).pow(decimals));
-    // call transfer function
-    contract.methods
-      .transfer(toAddress, value)
-      .send({ from: fromAddress })
-      .on('receipt', function (hash) {
-        //hash.from is the sender address
-        fetch('http://localhost:5000/', {
-          method: 'POST',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: 'name',
-            email: 'email',
-            tx: hash.transactionHash,
-            account: accounts,
-          }),
-        }).then(() => console.log(hash));
-      });
-  };
+  // const testTrx = () => {
+  //   let web3 = new Web3(ethereum);
+  //   let tokenAddress = '0x07865c6e87b9f70255377e024ace6630c1eaa37f';
+  //   let toAddress = accounts;
+  //   let fromAddress = accounts;
+  //   // Use BigNumber
+  //   let decimals = web3.utils.toBN(6);
+  //   let amount = web3.utils.toBN(donationModel ? donationAmount : price);
+  //   let minABI = [
+  //     // transfer
+  //     {
+  //       constant: false,
+  //       inputs: [
+  //         {
+  //           name: '_to',
+  //           type: 'address',
+  //         },
+  //         {
+  //           name: '_value',
+  //           type: 'uint256',
+  //         },
+  //       ],
+  //       name: 'transfer',
+  //       outputs: [
+  //         {
+  //           name: '',
+  //           type: 'bool',
+  //         },
+  //       ],
+  //       type: 'function',
+  //     },
+  //   ];
+  //   // Get ERC20 Token contract instance
+  //   let contract = new web3.eth.Contract(minABI, tokenAddress);
+  //   // calculate ERC20 token amount
+  //   let value = amount.mul(web3.utils.toBN(10).pow(decimals));
+  //   // call transfer function
+  //   contract.methods
+  //     .transfer(toAddress, value)
+  //     .send({ from: fromAddress })
+  //     .on('receipt', function (hash) {
+  //       //hash.from is the sender address
+  //       fetch('http://defiplugs.herokuapp.com', {
+  //         method: 'POST',
+  //         cache: 'no-cache',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           name: 'name',
+  //           email: 'email',
+  //           tx: hash.transactionHash,
+  //           account: accounts,
+  //         }),
+  //       }).then(() => console.log(hash));
+  //     });
+  // };
 
   return (
     <div className="settings">
@@ -356,7 +354,7 @@ function Settings({ accounts }) {
                   />
 
                   <button
-                    onClick={testTrx}
+                    //onClick={testTrx}
                     style={{
                       color: color,
                       background: colorBtn,
@@ -377,7 +375,6 @@ function Settings({ accounts }) {
                       transaction record) on database for the corresponding
                       transaction.
                     </p>
-                    <p>- You can check the button by clicking on it.</p>
                   </div>
                 </div>
               </TabPane>

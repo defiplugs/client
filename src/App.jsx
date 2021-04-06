@@ -29,7 +29,7 @@ function App() {
         <Sidebar />
         {account ? (
           <section className="main-section">
-            <Main />
+            <Main account={account} />
           </section>
         ) : (
           <div className="connect-notif">
